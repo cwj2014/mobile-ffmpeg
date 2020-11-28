@@ -194,7 +194,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/fribidi.pc.in AUTHORS COPYING ChangeLog INSTALL NEWS \
 	README THANKS TODO ar-lib compile config.guess config.sub \
-	install-sh ltmain.sh missing
+	depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -231,8 +231,8 @@ am__relativize = \
   done; \
   reldir="$$dir2"
 GZIP_ENV = --best
-DIST_ARCHIVES = $(distdir).tar.bz2
-DIST_TARGETS = dist-bzip2
+DIST_ARCHIVES = $(distdir).tar.xz
+DIST_TARGETS = dist-xz
 distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
@@ -379,7 +379,8 @@ SUBDIRS = gen.tab lib bin doc test
 EXTRA_DIST = autogen.sh ChangeLog.old \
 	meson.build meson_options.txt bin/meson.build doc/meson.build \
 	gen.tab/meson.build lib/meson.build test/meson.build \
-	test/test-runner.py test/unicode-conformance/meson.build
+	test/test-runner.py test/unicode-conformance/meson.build \
+        README.md
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = @PACKAGE@.pc
@@ -673,6 +674,7 @@ distdir-am: $(DISTFILES)
 dist-gzip: distdir
 	tardir=$(distdir) && $(am__tar) | eval GZIP= gzip $(GZIP_ENV) -c >$(distdir).tar.gz
 	$(am__post_remove_distdir)
+
 dist-bzip2: distdir
 	tardir=$(distdir) && $(am__tar) | BZIP2=$${BZIP2--9} bzip2 -c >$(distdir).tar.bz2
 	$(am__post_remove_distdir)
@@ -680,7 +682,6 @@ dist-bzip2: distdir
 dist-lzip: distdir
 	tardir=$(distdir) && $(am__tar) | lzip -c $${LZIP_OPT--9} >$(distdir).tar.lz
 	$(am__post_remove_distdir)
-
 dist-xz: distdir
 	tardir=$(distdir) && $(am__tar) | XZ_OPT=$${XZ_OPT--e} xz -c >$(distdir).tar.xz
 	$(am__post_remove_distdir)
